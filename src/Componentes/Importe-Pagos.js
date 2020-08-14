@@ -286,7 +286,7 @@ class ImportePagos extends React.Component {
 
     //DATOS DE LOS BENEFICIOS
     fetch(CONFIG + '/beneficio/listar/' + this.state.name)
-      .then((response) => { if (!response.ok) throw Error(response.status);
+      .then((response) => { 
         return response.json()
       })
       .then((beneficio) => {
@@ -918,7 +918,7 @@ class ImportePagos extends React.Component {
     //DE AQUI SACAMOS LOS DATOS DE LA LISTA DE PAGOS 
     //fetch(CONFIG+'recaudaciones/alumno/concepto/listar_cod/' + nombrenuevo)
     fetch(CONFIG + 'recaudaciones/alumno/concepto/listar_validados/' + nombrenuevo)
-      .then((response) => {
+      .then((response) => { if (!response.ok) throw Error(response.status);
         return response.json();
       })
       .then((pagos) => {
