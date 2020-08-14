@@ -916,8 +916,8 @@ class ImportePagos extends React.Component {
 
     //
     //DE AQUI SACAMOS LOS DATOS DE LA LISTA DE PAGOS 
-    //fetch(CONFIG+'recaudaciones/alumno/concepto/listar_cod/' + nombrenuevo)
-    fetch(CONFIG + 'recaudaciones/alumno/concepto/listar_validados/' + nombrenuevo)
+    fetch(CONFIG+'recaudaciones/alumno/concepto/listar_cod/' + nombrenuevo)
+    //fetch(CONFIG + 'recaudaciones/alumno/concepto/listar_validados/' + nombrenuevo)
       .then((response) => { if (!response.ok) throw Error(response.status);
         return response.json();
       })
