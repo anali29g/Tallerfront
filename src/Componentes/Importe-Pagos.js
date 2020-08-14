@@ -286,7 +286,7 @@ class ImportePagos extends React.Component {
 
     //DATOS DE LOS BENEFICIOS
     fetch(CONFIG + '/beneficio/listar/' + this.state.name)
-      .then((response) => {
+      .then((response) => { if (!response.ok) throw Error(response.status);
         return response.json()
       })
       .then((beneficio) => {
