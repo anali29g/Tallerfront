@@ -914,10 +914,11 @@ class ImportePagos extends React.Component {
     }
       
 ///CAMBIO
+
     fetch(CONFIG + 'recaudaciones/alumno/concepto/listar_validados/' + nombrenuevo)
     .then(Response => Response.json())
           .then((tourJson) => {
-            estadoup = this.state.usuario.estadoUp;
+            
             if(!tourJson){
               swal("Este código no presenta pagos validados", "", "info");
             }
@@ -927,7 +928,7 @@ class ImportePagos extends React.Component {
             console.error(error)
           });
 
-        e.preventDefault();
+        
 
 
 ///FIN DE CAMBIO
