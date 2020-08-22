@@ -913,26 +913,7 @@ class ImportePagos extends React.Component {
 
     }
       
-///CAMBIO
-
-    fetch(CONFIG + 'recaudaciones/alumno/concepto/listar_validados/' + nombrenuevo)
-    .then(Response => Response.json())
-          .then((tourJson) => {
-            
-            if(!tourJson){
-              swal("Este código no presenta pagos validados", "", "info");
-            }
-          }).catch(error => {
-
-            swal("Oops, Algo salió mal!", "","error")
-            console.error(error)
-          });
-
-        
-
-
-///FIN DE CAMBIO
-    //
+    
     //DE AQUI SACAMOS LOS DATOS DE LA LISTA DE PAGOS 
     fetch(CONFIG+'recaudaciones/alumno/concepto/listar_cod/' + nombrenuevo)
     //fetch(CONFIG + 'recaudaciones/alumno/concepto/listar_validados/' + nombrenuevo)
