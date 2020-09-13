@@ -912,38 +912,292 @@ class ImportePagos extends React.Component {
       console.log(conceptoResto)
 
     }
-
-
-    //
     //DE AQUI SACAMOS LOS DATOS DE LA LISTA DE PAGOS 
     fetch(CONFIG+'recaudaciones/alumno/concepto/listar_cod/' + nombrenuevo)
-    .then((response) => { if (!response.ok) throw Error(response.status);
-      return response.json();
-    })
-        .then((tourJson)=> {
+    //fetch(CONFIG + 'recaudaciones/alumno/concepto/listar_validados/' + nombrenuevo)
+      .then((response) => { 
+        return response.json();
+      }).then((pagos) => {
+        if (pagos.length==0 ){
+          swal("No se encontraron pagos con el codigo ingresado","","info");
+          browserHistory.push('/vista/loginFormAdmi');
+        }else {
           var x=0;
           var y=0;
-                    for(var j = 0; j < tourJson.length; j++) {
-                      if (tourJson[j].validado === true) {
+                    for(var j = 0; j < pagos.length; j++) {
+                      if (pagos[j].validado === true) {
                         x=x+1;                           
                       }
-                      if (tourJson[j].validado === false) {
+                      if (pagos[j].validado === false) {
                         y=y+1;                           
                       }}
                       if(x>=1){
                         swal("Se encontraron pagos validados", "", "success");
-                      }else if(x==0&&y==0){
-                        swal("No se encontraron pagos con el codigo ingresado","","info");
-                        browserHistory.push('/vista/loginFormAdmi');
                       } else if(x==0) {
                         swal("No se encontraron pagos validados", "", "error");
                       }
-                    
-                })
-    //fetch(CONFIG + 'recaudaciones/alumno/concepto/listar_validados/' + nombrenuevo)
-  
-      
-      
+        
+        console.log("Programa de lista de pagos");
+        console.log(pagos);
+        this.setState({
+          estadoAlumno: pagos[0].estado_civil,
+          nombrePrograma: pagos[0].sigla_programa,
+          codigoPrograma: pagos[0].idPrograma,
+          codigoAlumno: pagos[0].codAlumno,
+          anioIngresoAlumno: pagos[0].anio_ingreso
+        })
+        console.log("Debemos buscar esto");
+        
+        //todo esta data es para el ejemplo 18207001
+        console.log(this.state.estadoAlumno); //soltero
+        console.log(this.state.nombrePrograma);//DISI
+        console.log("El codigo de programa es :->", this.state.codigoPrograma); //8
+        console.log(this.state.codigoAlumno);//182007001
+        console.log(this.state.anioIngresoAlumno);//2018-1
+
+        //DIPLOMADO//
+        const diplomaturaGPGE = '1';
+        const diplomaturaASTI = '2';
+        const diplomaturaGPTI = '3';
+        let identifiTipGrado = pagos[0].idPrograma;
+        //****************************************** */
+        //*********************INICIO*************** */
+        //****************************************** */
+        if (identifiTipGrado == diplomaturaGPGE||identifiTipGrado == diplomaturaASTI||identifiTipGrado == diplomaturaGPTI) {
+          this.setState({
+            diplomado: true
+          })
+          console.log("entro aqui", CONFIG + 'importealumno/search/' + this.state.codigoAlumno + '/' + this.state.codigoPrograma + '/62');
+          fetch(CONFIG + 'importealumno/search/' + this.state.codigoAlumno + '/' + this.state.codigoPrograma + '/62/3')
+
+            .then((response) => {
+              return response.json()
+            })
+            .then((data) => {
+              //ESTA TABLA ES LA DE DERECHO DE ENSEÑANZA
+
+              console.log(data.importe)
+              this.setState({
+                importeTabla2: data.importe,
+                bool2: 1,
+                tipoMonedaMatriculaUpg: data.id_moneda,
+                tipoMonedaMatriculaEpg: data.id_moneda,
+                tipoMonedaDerechoEnseñanza:data.id_moneda,
+                tipoMonedaRepitencia:data.id_moneda,
+
+              })
+              listaImportesTabla.push(data.importe);
+              console.log("Importe 6");
+              console.log(this.state.importeTabla2);
+              console.log(this.state.listaImportesTabla);
+
+              document.getElementById("costoDos").value = this.state.importeTabla2;
+            })
+            .catch(error => {
+              console.error(error)
+            });
+        }
+
+        else {
+
+
+
+          fetch(CONFIG + 'importealumno/search/' + this.state.codigoAlumno + '/' + this.state.codigoPrograma + '/9/1')
+            .then((response) => {
+              return response.json()
+            })
+            .then((data) => {
+              console.log("Importe 1");
+              console.log(data.importe)
+              this.setState((state) => {
+                return {
+                  importeTabla1: data.importe,
+                  bool1: 1,
+                  tipoMonedaMatriculaUpg: data.id_moneda
+
+                }
+
+              })
+              listaImportesTabla.push(data.importe);
+              console.log("Importe 2");
+              console.log(this.state.importeTabla1);
+
+              console.log(this.state.listaImportesTabla);
+              document.getElementById("costoUno").value = this.state.importeTabla1;
+            })
+            .catch(error => {
+              console.error(error)
+            });
+
+          fetch(CONFIG + 'importealumno/search/' + this.state.codigoAlumno + '/' + this.state.codigoPrograma + '/21/3')
+            .then((response) => {
+              return response.json()
+            })
+            .then((data) => {
+
+              //ESTA TABLA ES LA DE DERECHO DE ENSEÑANZA
+              console.log("la data derecho enseñanza es  ->", data);
+              console.log("El importe a pagar  es ->", data.importe);
+              this.setState((state) => {
+                return {
+                  importeTabla2: data.importe,
+                  bool2: 1,
+                  tipoMonedaDerechoEnseñanza: data.id_moneda
+                }
+              })
+              listaImportesTabla.push(data.importe);
+
+              document.getElementById("costoDos").value = this.state.importeTabla2;
+            })
+            .catch(error => {
+              console.error(error)
+            });
+
+
+          fetch(CONFIG + 'importealumno/search/' + this.state.codigoAlumno + '/' + this.state.codigoPrograma + '/21/4')
+            .then((response) => {
+              return response.json()
+            })
+            .then((data) => {
+              //ESTA TABLA ES LA DE DERECHO DE ENSEÑANZA
+              console.log("El importe a pagar es ->", data.importe);
+              this.setState((state) => {
+                return {
+                  importeRepitencia: data.importe,
+                  tieneImporteRepitencia: 1,
+                  tipoMonedaRepitencia: data.id_moneda
+
+                }
+              })
+              listaImportesTabla.push(data.importe);
+
+              document.getElementById("repitencia").value = this.state.importeRepitencia;
+            })
+            .catch(error => {
+              console.error(error)
+            });
+
+
+          fetch(CONFIG + 'importealumno/search/' + this.state.codigoAlumno + '/' + this.state.codigoPrograma + '/117/2')
+            .then((response) => {
+              return response.json()
+            })
+            .then((data) => {
+              console.log("Importe 5");
+              console.log(data.importe)
+              this.setState((state) => {
+                return {
+                  importeTabla3: data.importe,
+                  bool3: 1,
+                  tipoMonedaMatriculaEpg: data.id_moneda
+                }
+              })
+              listaImportesTabla.push(data.importe);
+              console.log("Importe 6");
+              console.log(this.state.importeTabla3);
+              console.log(this.state.listaImportesTabla);
+
+              document.getElementById("costoTres").value = this.state.importeTabla3;
+            })
+            .catch(error => {
+              console.error(error)
+            });
+        }
+
+
+        this.setState({
+          importeTabla: listaImportesTabla
+        })
+        /**Costos x Ciclo */
+        // var arrayCostosDet = [];
+        var num = 0;
+        fetch(CONFIG+"/programa_presupuesto/listar/" + this.state.codigoAlumno)
+        .then((response) => {
+            return response.json()
+          })
+          .then((data) => {
+
+            this.setState({
+              costoxciclo: data,
+            })
+
+          })
+          .catch(error => {
+            console.error(error)
+          });
+          // fetch("https://costoprogramas-back.herokuapp.com/presupuestos/" + this.state.codigoPrograma)
+          // .then((response) => {
+          //   return response.json()
+          // })
+          // .then((data) => {
+          //   console.log("DATA COSTOxCICLO2");
+          //   console.log(data)
+
+          //   data.programaPresupuestoDetalles.forEach(function (concepto) {
+          //     num = num + 1;
+          //     var e = { id: num, ciclo: concepto.programaCiclo.ciclo, concepto: concepto.concepto.concepto, monto: concepto.importe };
+          //     arrayCostosDet.push(e);
+
+          //   });
+          //   console.log("DATA COSTOxCICLO3");
+          //   console.log(arrayCostosDet);
+
+          // })
+          // .catch(error => {
+          //   console.error(error)
+          // });
+
+          
+        
+
+        //****************************************** */
+        //*********************FIN***************** */
+        //****************************************** */
+        console.log("DATA COSTOxCICLO4");
+        console.log(this.state.costoxciclo);
+
+        /**OTRAS OBLIGACIONES PENDIENTES DE PAGO */
+        var arrayObligacion = [];
+
+        fetch(CONFIG + 'importealumnoobligaciones/search/' + this.state.codigoAlumno + '/' + this.state.codigoPrograma)
+          .then((response) => {
+            return response.json()
+          })
+          .then((listaOblig) => {
+            console.log("Otras Obligaciones");
+            console.log(listaOblig);
+
+            /*if(listaOblig.length==1){
+              var e ={id: num, id_tipo_oblig:listaOblig.id_tipo_obligacion,descripcion:listaOblig.descripcion,id_concepto:listaOblig.cod_concepto,  
+                id_moneda:listaOblig.id_moneda,importe:listaOblig.importe,id_estado:listaOblig.id_tobligacion_estado};
+               arrayObligacion.push(e);
+            }else{*/
+            listaOblig.forEach(function (data) {
+
+              var e = {
+                id: data.id_importe_alumno_obligaciones, id_tipo_oblig: data.id_tipo_obligacion, descripcion: data.descripcion, id_concepto: data.cod_concepto,
+                id_moneda: data.id_moneda, importe: data.importe, id_estado: data.id_tobligacion_estado
+              };
+              arrayObligacion.push(e);
+
+            });
+
+            //}
+
+          })
+          .catch(error => {
+            console.error(error)
+          });
+        this.setState({
+          otrasObligaciones: arrayObligacion,
+        })
+        console.log("Otras Obligaciones-Det");
+        console.log(this.state.otrasObligaciones);
+
+
+        }//aqui termina pagos
+
+      });
 
 
 
