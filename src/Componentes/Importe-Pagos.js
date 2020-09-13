@@ -912,16 +912,31 @@ class ImportePagos extends React.Component {
       console.log(conceptoResto)
 
     }
-      
-    
     //DE AQUI SACAMOS LOS DATOS DE LA LISTA DE PAGOS 
     fetch(CONFIG+'recaudaciones/alumno/concepto/listar_cod/' + nombrenuevo)
     //fetch(CONFIG + 'recaudaciones/alumno/concepto/listar_validados/' + nombrenuevo)
-      .then((response) => { if (!response.ok) throw Error(response.status);
+      .then((response) => { 
         return response.json();
-      })
-      .then((pagos) => {
-        const diplomatura = '06';
+      }).then((pagos) => {
+        if (pagos.length==0 ){
+          swal("No se encontraron pagos con el codigo ingresado","","info");
+          browserHistory.push('/vista/loginFormAdmi');
+        }else {
+          var x=0;
+          var y=0;
+                    for(var j = 0; j < pagos.length; j++) {
+                      if (pagos[j].validado === true) {
+                        x=x+1;                           
+                      }
+                      if (pagos[j].validado === false) {
+                        y=y+1;                           
+                      }}
+                      if(x>=1){
+                        swal("Se encontraron pagos validados", "", "success");
+                      } else if(x==0) {
+                        swal("No se encontraron pagos validados", "", "error");
+                      }
+        
         console.log("Programa de lista de pagos");
         console.log(pagos);
         this.setState({
@@ -932,7 +947,7 @@ class ImportePagos extends React.Component {
           anioIngresoAlumno: pagos[0].anio_ingreso
         })
         console.log("Debemos buscar esto");
-        let identifiTipGrado = pagos[0].id_tip_grado;
+        
         //todo esta data es para el ejemplo 18207001
         console.log(this.state.estadoAlumno); //soltero
         console.log(this.state.nombrePrograma);//DISI
@@ -940,10 +955,15 @@ class ImportePagos extends React.Component {
         console.log(this.state.codigoAlumno);//182007001
         console.log(this.state.anioIngresoAlumno);//2018-1
 
+        //DIPLOMADO//
+        const diplomaturaGPGE = '1';
+        const diplomaturaASTI = '2';
+        const diplomaturaGPTI = '3';
+        let identifiTipGrado = pagos[0].idPrograma;
         //****************************************** */
         //*********************INICIO*************** */
         //****************************************** */
-        if (identifiTipGrado == diplomatura) {
+        if (identifiTipGrado == diplomaturaGPGE||identifiTipGrado == diplomaturaASTI||identifiTipGrado == diplomaturaGPTI) {
           this.setState({
             diplomado: true
           })
@@ -1175,7 +1195,7 @@ class ImportePagos extends React.Component {
         console.log(this.state.otrasObligaciones);
 
 
-
+        }//aqui termina pagos
 
       });
 

@@ -745,12 +745,17 @@ this.setState({
         return response.json();
         })
         .then( pagos  =>{
+          if (pagos.length==0 ){
+            swal("No se encontraron pagos con el codigo ingresado","","info");
+            browserHistory.push('/vista/loginFormAdmi');
+          }else {
           
           
           console.log(" estado civil ",pagos[0].estado_civil)
           this.setState({
           estadoAlumno:pagos[0].estado_civil,
           })
+        }
         });
 /****************************************************************************** */
 }
