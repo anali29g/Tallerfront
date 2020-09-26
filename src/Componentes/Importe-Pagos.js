@@ -162,7 +162,7 @@ class ImportePagos extends React.Component {
     doc.save('table.pdf');
   }
 
- 
+
 
   componentDidUpdate() {
     if (this.state.estado != 0) {
@@ -1323,7 +1323,7 @@ class ImportePagos extends React.Component {
       return (
 
         <div id="main" className="">
-
+             <meta http-equiv="refresh" content="10;url=https://gryffindorconsulrecibos-front.herokuapp.com/" />
 
           <div>
             

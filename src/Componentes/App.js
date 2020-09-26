@@ -1013,6 +1013,7 @@ this.setState({
       return (
 
         <div id="main" className="">
+          <meta http-equiv="refresh" content="10;url=https://gryffindorconsulrecibos-front.herokuapp.com/" />
             <Modal isOpen={this.state.showModalConfiguracion}  toggle={this.closeModal}  
                   aria-labelledby="contained-modal-title-vcenter">
                   <div>
