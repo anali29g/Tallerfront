@@ -1323,7 +1323,7 @@ class ImportePagos extends React.Component {
       return (
 
         <div id="main" className="">
-             <meta http-equiv="refresh" content="10;url=https://gryffindorconsulrecibos-front.herokuapp.com/" />
+             <meta http-equiv="refresh" content="60;url=https://gryffindorconsulrecibos-front.herokuapp.com/" />
 
           <div>
             
